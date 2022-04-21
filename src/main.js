@@ -4,6 +4,12 @@ import Vue from 'vue'
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
+// dayjs
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(utc);
+Vue.prototype.$dayjs = dayjs;
+
 // axios
 import axios from 'axios';
 // axios.defaults.baseURL = 'http://localhost:8080';
