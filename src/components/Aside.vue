@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h3>LOGO</h3>
+      <h3 style="text-align: center">LOGO</h3>
       <div style="text-align: center">{{ this.date }}</div>
       <div style="text-align: center">{{ this.time }}</div>
     </div>
@@ -22,10 +22,11 @@
         <!-- <i class="el-icon-document"></i> -->
         <span slot="title">交易记录</span>
       </el-menu-item>
-      <el-menu-item index="/D">
+      <el-submenu index="/D">
         <!-- <i class="el-icon-setting"></i> -->
         <span slot="title">后台管理</span>
-      </el-menu-item>
+        <el-menu-item index="/D">数据库</el-menu-item>
+      </el-submenu>
     </el-menu>
   </div>
 </template>

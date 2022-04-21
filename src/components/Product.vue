@@ -16,7 +16,9 @@
             </i>
             筛选
           </el-button>
-          <el-button type="primary" @click="filterClick"> 搜索 </el-button>
+          <el-button type="primary" @click="filterClick">
+            <i class="el-icon-search"> </i> 搜索
+          </el-button>
           <el-button type="success" @click="createCustomerClick">
             创建新产品
           </el-button>
@@ -25,9 +27,7 @@
     </div>
     <div v-if="!fold">
       <el-table :data="[{}]" :show-header="false">
-        <el-table-column width="100">
-          产品类型
-        </el-table-column>
+        <el-table-column width="100"> 产品类型 </el-table-column>
         <el-table-column>
           <el-checkbox v-model="form.product_type1">货币基金</el-checkbox>
           <el-checkbox v-model="form.product_type2">债券基金</el-checkbox>
@@ -36,9 +36,7 @@
         </el-table-column>
       </el-table>
       <el-table :data="[{}]" :show-header="false">
-        <el-table-column width="100">
-        产品风险
-        </el-table-column>
+        <el-table-column width="100"> 产品风险 </el-table-column>
         <el-table-column>
           <el-checkbox v-model="form.product_risk1">低</el-checkbox>
           <el-checkbox v-model="form.product_risk2">中</el-checkbox>
@@ -48,7 +46,7 @@
     </div>
     <div>
       <el-table :data="table" border>
-        <el-table-column prop="product_number" label="产品编号">
+        <el-table-column prop="product_number_str" label="产品编号">
         </el-table-column>
         <el-table-column prop="product_name" label="产品名称">
         </el-table-column>
@@ -109,6 +107,13 @@ export default {
         })
         .then((response) => {
           console.log("filter res:", response);
+          let table = response.data.product_info;
+          for (let i of table) {
+            i.product_number_str = (1000000 + i.product_number + "").slice(
+              1,
+              7
+            );
+          }
           this.table = response.data.product_info;
           console.log(this.table);
         });
