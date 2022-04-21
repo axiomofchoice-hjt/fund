@@ -2,10 +2,7 @@
   <div>
     <el-row>
       <el-col :span="4">
-        <el-menu
-          default-active="2"
-          class="el-menu-vertical-demo"
-        >
+        <el-menu default-active="2" class="el-menu-vertical-demo">
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -50,18 +47,35 @@
                 >
                 </el-input>
               </el-table-column>
-              <el-table-column width="100">
-                <el-button type="primary" @click="filterClick"> 筛选 </el-button>
-                <!-- <el-radio-group v-model="headerRadio" style="float: right">
-            <el-radio-button label="用户信息"></el-radio-button>
-            <el-radio-button label="产品信息"></el-radio-button>
-            <el-radio-button label="交易信息"></el-radio-button>
-          </el-radio-group> -->
+              <el-table-column width="200">
+                <el-button type="primary" @click="filterClick">
+                  筛选
+                </el-button>
+                <el-button type="success" @click="createCustomerClick">
+                  开户
+                </el-button>
               </el-table-column>
             </el-table>
           </el-header>
           <el-main>
-            <el-table border />
+            <el-table :data="table" border>
+              <el-table-column prop="customer_name" label="客户姓名">
+              </el-table-column>
+              <el-table-column prop="customer_type" label="客户类型">
+              </el-table-column>
+              <el-table-column prop="customer_id_type" label="证件类型">
+              </el-table-column>
+              <el-table-column prop="customer_id" label="证件号码">
+              </el-table-column>
+              <el-table-column prop="customer_risk" label="风险等级">
+              </el-table-column>
+              <el-table-column label="操作">
+                <div style="text-align: center">
+                <el-button type="primary">查看</el-button>
+                <el-button type="danger">删除</el-button>
+                </div>
+              </el-table-column>
+            </el-table>
           </el-main>
         </el-container>
       </el-col>
@@ -75,16 +89,27 @@ export default {
     return {
       filterInput: "",
       headerRadio: "用户信息",
+      table: [],
     };
+  },
+  mounted() {
+    this.$http.post("/client/viewAllCustomer", {}).then((response) => {
+      console.log(response);
+      this.table = response.data.customer_info;
+      console.log(this.table);
+    });
   },
   methods: {
     filterClick() {
-      this.$http.post("/client/viewAllCustomer", {
-
-      }).then((response) => {
+      this.$http.post("/client/viewAllCustomer", {}).then((response) => {
         console.log(response);
-      })
+        this.table = response.data.customer_info;
+        console.log(this.table);
+      });
+    },
+    createCustomerClick() {
+      this.$router.push("/create-customer")
     }
-  }
+  },
 };
 </script>
