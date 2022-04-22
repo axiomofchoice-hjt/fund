@@ -10,7 +10,7 @@
           >
           </el-input>
         </el-table-column>
-        <el-table-column width="350">
+        <el-table-column :width="330">
           <el-button @click="foldClick">
             <i :class="fold ? 'el-icon-caret-right' : 'el-icon-caret-bottom'">
             </i>
@@ -56,10 +56,10 @@
         </el-table-column>
         <el-table-column prop="product_state" label="产品状态">
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" :width="120">
           <template -slot-scope="scope">
             <div style="text-align: center">
-              <el-button type="primary" style="margin-right: 15px">
+              <el-button type="primary">
                 查看
               </el-button>
             </div>
@@ -92,7 +92,8 @@ export default {
     this.filterClick();
   },
   methods: {
-    filterClick() {
+    filterClick(event) {
+      if (event != undefined) event.currentTarget.blur();
       this.table = [];
       this.$http
         .post("/client/searchProduct", {
@@ -118,7 +119,8 @@ export default {
           console.log(this.table);
         });
     },
-    foldClick() {
+    foldClick(event) {
+      if (event != undefined) event.currentTarget.blur();
       this.fold ^= true;
     },
     createCustomerClick() {

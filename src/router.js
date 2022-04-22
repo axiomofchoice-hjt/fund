@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Main from '@/views/View'
 import Customer from "@/components/Customer"
 import CreateCustomer from '@/components/CreateCustomer'
+import CheckCustomer from "@/components/CheckCustomer"
 import Product from "@/components/Product"
 import CreateProduct from "@/components/CreateProduct"
 
@@ -21,6 +22,7 @@ export default new VueRouter({
       children: [
         { path: "/customer", component: Customer },
         { path: "/create-customer", component: CreateCustomer },
+        {path:"/check-customer/:number",component: CheckCustomer},
         { path: "/product", component: Product },
         { path: "/create-product", component: CreateProduct },
         

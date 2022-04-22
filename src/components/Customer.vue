@@ -10,7 +10,7 @@
           >
           </el-input>
         </el-table-column>
-        <el-table-column width="200">
+        <el-table-column :width="190">
           <el-button type="primary" @click="filterClick">
             <i class="el-icon-search"> </i> 搜索
           </el-button>
@@ -31,10 +31,10 @@
         <el-table-column prop="customer_id" label="证件号码"> </el-table-column>
         <el-table-column prop="customer_risk" label="风险等级">
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" :width="190">
           <template slot-scope="scope">
             <div style="text-align: center">
-              <el-button type="primary" style="margin-right: 15px">
+              <el-button type="primary" style="margin-right: 10px" @click="checkClick(scope)">
                 查看
               </el-button>
               <el-popconfirm title="删除客户？" @confirm="deleteClick(scope)">
@@ -60,7 +60,8 @@ export default {
     this.filterClick();
   },
   methods: {
-    filterClick() {
+    filterClick(event) {
+      if (event != undefined) event.currentTarget.blur();
       this.$http.post("/client/viewAllCustomer", {}).then((response) => {
         console.log(response);
         this.table = response.data.customer_info;
@@ -69,6 +70,9 @@ export default {
     },
     createCustomerClick() {
       this.$router.push("/create-customer");
+    },
+    checkClick(scope) {
+      this.$router.push(`/check-customer/${scope.row.customer_number}`)
     },
     deleteClick(scope) {
       console.log(scope.row);
