@@ -56,6 +56,15 @@ export default {
       if (this.$route.path.indexOf("/create-customer") == 0) {
         return "/customer";
       }
+      if (this.$route.path.indexOf("/check-customer") == 0) {
+        return "/customer";
+      }
+      if (this.$route.path.indexOf("/create-product") == 0) {
+        return "/product";
+      }
+      if (this.$route.path.indexOf("/check-product") == 0) {
+        return "/product";
+      }
       return this.$route.path;
     },
     timeInit() {
