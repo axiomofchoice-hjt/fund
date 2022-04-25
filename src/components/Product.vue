@@ -56,6 +56,15 @@
         </el-table-column>
         <el-table-column prop="product_state" label="产品状态">
         </el-table-column>
+        <el-table-column label="净值" :width="250">
+          <template slot-scope="scope">
+            {{ scope.row.price1.toFixed(2) }}
+            <span :style="{ color: pricePercentColor(scope) }">
+              <i :class="pricePercentArrow(scope)"></i>
+              {{ pricePercent(scope).toFixed(2) }}%
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" :width="120">
           <template slot-scope="scope">
             <div style="text-align: center">
@@ -91,6 +100,7 @@ export default {
   mounted() {
     this.filterClick();
   },
+  computed: {},
   methods: {
     flush() {
       this.filterClick();
@@ -130,7 +140,7 @@ export default {
       this.$router.push("/create-product");
     },
     checkProductClick(scope) {
-      this.$router.push(`/check-product/${scope.row.product_number}`)
+      this.$router.push(`/check-product/${scope.row.product_number}`);
     },
     deleteClick(scope) {
       // console.log(scope.row);
@@ -142,6 +152,24 @@ export default {
       //     console.log("delete result:", response);
       //     this.filterClick();
       //   });
+    },
+    pricePercent(scope) {
+      // return 0.004
+      return ((scope.row.price1 - scope.row.price2) / scope.row.price2) * 100;
+    },
+    pricePercentColor(scope) {
+      return Math.abs(this.pricePercent(scope)) < 0.005
+        ? "grey"
+        : this.pricePercent(scope) > 0
+        ? "red"
+        : "green";
+    },
+    pricePercentArrow(scope) {
+      return Math.abs(this.pricePercent(scope)) < 0.005
+        ? "el-icon-caret-right"
+        : this.pricePercent(scope) > 0
+        ? "el-icon-caret-top"
+        : "el-icon-caret-bottom";
     },
   },
 };

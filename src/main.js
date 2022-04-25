@@ -16,6 +16,10 @@ import axios from 'axios';
 axios.defaults.baseURL = 'http://192.168.43.104:13333';
 Vue.prototype.$http = axios;
 
+// echarts
+import * as echarts from "echarts";
+Vue.prototype.$echarts = echarts;
+
 // element-ui
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';

@@ -29,7 +29,7 @@ export default {
       this.table = [];
       this.$http
         .post("/client/viewTable", {
-          table: "db_trade",
+          table: "db_money",
         })
         .then((response) => {
           this.table = response.data.data;

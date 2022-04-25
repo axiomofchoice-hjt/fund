@@ -105,6 +105,7 @@ export default {
   data() {
     return {
       basic: {
+        customer_number: "",
         customer_name: "",
         customer_type: "",
         customer_id_type: "",
@@ -113,7 +114,6 @@ export default {
       },
       bank_card: [],
       product: [],
-      riskEdit: false,
     };
   },
   mounted() {
@@ -145,17 +145,14 @@ export default {
           }
 
           for (let i of this.product) {
-            i.product_number_str = (1000000 + i.product_number + "").slice(
-              1,
-              7
-            );
-            i.hold_amount_str = "" + i.hold_amount;
+            i.product_number_str = (1000000 + i.product_number + "").substring(1);
+            i.hold_amount_str = "" + i.hold_amount.toFixed(2);
             if (Math.abs(i.purchase_amount) > 1e-6)
-              i.hold_amount_str += ` (+${i.purchase_amount})`;
+              i.hold_amount_str += ` (+${i.purchase_amount.toFixed(2)})`;
 
-            i.hold_share_str = "" + i.hold_share;
+            i.hold_share_str = "" + i.hold_share.toFixed(2);
             if (Math.abs(i.redeem_share) > 1e-6)
-              i.hold_share_str += ` (-${i.redeem_share})`;
+              i.hold_share_str += ` (-${i.redeem_share.toFixed(2)})`;
           }
         });
     },
@@ -269,13 +266,12 @@ export default {
         showConfirmButton: false,
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-      })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消",
-          });
+      }).catch(() => {
+        this.$message({
+          type: "info",
+          message: "已取消",
         });
+      });
     },
     addBankCard(event) {
       if (event != undefined) event.currentTarget.blur();

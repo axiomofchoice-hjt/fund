@@ -3,8 +3,10 @@
     <div>
       <h2 style="text-align: center">LOGO</h2>
       <div style="text-align: center">
-        <el-button style="font-size: 20px" @click="timeClick">
-          {{ this.date }}<br />{{ this.time }}
+        <el-button style="font-size: 20px; line-height: 130%" @click="timeClick">
+          {{ this.date }} <br />
+          {{ this.time }} <br />
+          {{ this.week }}
         </el-button>
       </div>
     </div>
@@ -51,6 +53,7 @@ export default {
     return {
       date: "",
       time: "",
+      week: "",
     };
   },
   mounted() {
@@ -75,7 +78,8 @@ export default {
     timeInit() {
       this.$http.post("/client/viewSystemTime", {}).then((response) => {
         // console.log(response.data.system_time, response.data.system_time.split(" "));
-        [this.date, this.time] = response.data.system_time.split(" ");
+        [this.date, this.time, this.week] =
+          response.data.system_time.split(" ");
       });
     },
     timeAdd(millisecond) {
