@@ -19,7 +19,7 @@
           <el-button type="primary" @click="filterClick">
             <i class="el-icon-search"> </i> 搜索
           </el-button>
-          <el-button type="success" @click="createCustomerClick">
+          <el-button type="success" @click="createProductClick">
             创建新产品
           </el-button>
         </el-table-column>
@@ -57,9 +57,9 @@
         <el-table-column prop="product_state" label="产品状态">
         </el-table-column>
         <el-table-column label="操作" :width="120">
-          <template -slot-scope="scope">
+          <template slot-scope="scope">
             <div style="text-align: center">
-              <el-button type="primary">
+              <el-button type="primary" @click="checkProductClick(scope)">
                 查看
               </el-button>
             </div>
@@ -92,6 +92,9 @@ export default {
     this.filterClick();
   },
   methods: {
+    flush() {
+      this.filterClick();
+    },
     filterClick(event) {
       if (event != undefined) event.currentTarget.blur();
       this.table = [];
@@ -123,8 +126,11 @@ export default {
       if (event != undefined) event.currentTarget.blur();
       this.fold ^= true;
     },
-    createCustomerClick() {
+    createProductClick() {
       this.$router.push("/create-product");
+    },
+    checkProductClick(scope) {
+      this.$router.push(`/check-product/${scope.row.product_number}`)
     },
     deleteClick(scope) {
       // console.log(scope.row);

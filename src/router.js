@@ -6,6 +6,7 @@ import CreateCustomer from '@/components/CreateCustomer'
 import CheckCustomer from "@/components/CheckCustomer"
 import Product from "@/components/Product"
 import CreateProduct from "@/components/CreateProduct"
+import CheckProduct from "@/components/CheckProduct"
 
 import db_customer from "@/components/DataBase/db_customer"
 import db_bank_card from "@/components/DataBase/db_bank_card"
@@ -23,10 +24,11 @@ export default new VueRouter({
       children: [
         { path: "/customer", component: Customer },
         { path: "/create-customer", component: CreateCustomer },
-        {path:"/check-customer/:number",component: CheckCustomer},
+        { path: "/check-customer/:number", component: CheckCustomer },
         { path: "/product", component: Product },
         { path: "/create-product", component: CreateProduct },
-        
+        { path: "/check-product/:number", component: CheckProduct },
+
         { path: "/database/db_customer", component: db_customer },
         { path: "/database/db_bank_card", component: db_bank_card },
         { path: "/database/db_product", component: db_product },

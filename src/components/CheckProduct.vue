@@ -3,7 +3,7 @@
     <el-container>
       <el-main>
         <div class="s-header">
-          <el-page-header @back="$router.go(-1)" content="客户详细信息">
+          <el-page-header @back="$router.go(-1)" content="产品详细信息">
           </el-page-header>
         </div>
         <div class="s-title">基本信息</div>

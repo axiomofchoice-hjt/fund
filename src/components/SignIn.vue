@@ -63,6 +63,7 @@ export default {
     };
   },
   methods: {
+    flush() {},
     alwaysSignInClick(event) {
       if (event != undefined) event.currentTarget.blur();
       this.$router.push("/product");

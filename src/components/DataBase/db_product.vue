@@ -25,16 +25,19 @@ export default {
     };
   },
   mounted() {
-    this.table = [];
-    this.$http
-    .post("/client/viewTable", {
-        table: "db_product",
-    })
-    .then((response) => {
-        this.table = response.data.data;
-    });
+    this.flush();
   },
   methods: {
+    flush() {
+      this.table = [];
+      this.$http
+        .post("/client/viewTable", {
+          table: "db_product",
+        })
+        .then((response) => {
+          this.table = response.data.data;
+        });
+    },
   },
 };
 </script>

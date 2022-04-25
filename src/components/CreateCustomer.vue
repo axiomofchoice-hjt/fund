@@ -60,6 +60,7 @@ export default {
   },
   mounted() {},
   methods: {
+    flush() {},
     createClick() {
       console.log(this.form.customer_name);
       this.$http.post("/client/createCustomer", this.form).then((response) => {

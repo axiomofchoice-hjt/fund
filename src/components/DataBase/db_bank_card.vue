@@ -2,8 +2,7 @@
   <div>
     <div>
       <el-table :data="table" border>
-        <el-table-column prop="bank_card_key" label="主键">
-        </el-table-column>
+        <el-table-column prop="bank_card_key" label="主键"> </el-table-column>
         <el-table-column prop="bank_card_number" label="银行卡号">
         </el-table-column>
         <el-table-column prop="customer_number" label="客户编号">
@@ -23,16 +22,19 @@ export default {
     };
   },
   mounted() {
-    this.table = [];
-    this.$http
-    .post("/client/viewTable", {
-        table: "db_bank_card",
-    })
-    .then((response) => {
-        this.table = response.data.data;
-    });
+    this.flush();
   },
   methods: {
+    flush() {
+      this.table = [];
+      this.$http
+        .post("/client/viewTable", {
+          table: "db_bank_card",
+        })
+        .then((response) => {
+          this.table = response.data.data;
+        });
+    },
   },
 };
 </script>

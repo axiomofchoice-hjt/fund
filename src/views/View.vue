@@ -2,10 +2,10 @@
   <div v-if="$route.path != '/'">
     <el-row :gutter="10">
       <el-col :span="4">
-        <xaside />
+        <xaside @needFlush="flush" />
       </el-col>
       <el-col :span="20">
-        <router-view></router-view>
+        <router-view ref="child"></router-view>
       </el-col>
     </el-row>
   </div>
@@ -21,5 +21,11 @@ export default {
     xaside,
     SignIn,
   },
+  methods: {
+    flush() {
+      console.log("flush");
+      this.$refs.child.flush();
+    }
+  }
 };
 </script>

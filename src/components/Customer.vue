@@ -60,6 +60,9 @@ export default {
     this.filterClick();
   },
   methods: {
+    flush() {
+      this.filterClick();
+    },
     filterClick(event) {
       if (event != undefined) event.currentTarget.blur();
       this.$http.post("/client/viewAllCustomer", {}).then((response) => {

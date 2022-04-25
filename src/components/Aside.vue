@@ -1,9 +1,12 @@
 <template>
   <div>
     <div>
-      <h3 style="text-align: center">LOGO</h3>
-      <div style="text-align: center">{{ this.date }}</div>
-      <div style="text-align: center">{{ this.time }}</div>
+      <h2 style="text-align: center">LOGO</h2>
+      <div style="text-align: center">
+        <el-button style="font-size: 20px" @click="timeClick">
+          {{ this.date }}<br />{{ this.time }}
+        </el-button>
+      </div>
     </div>
     <el-menu
       :default-active="active()"
@@ -25,6 +28,7 @@
       <el-submenu index="/D">
         <!-- <i class="el-icon-setting"></i> -->
         <span slot="title">后台管理</span>
+        <!-- <el-menu-item index="/time-setter">时间管理带师</el-menu-item> -->
         <el-submenu index="/database">
           <span slot="title">数据库</span>
           <el-menu-item index="/database/db_customer">客户信息表</el-menu-item>
@@ -69,8 +73,89 @@ export default {
       return this.$route.path;
     },
     timeInit() {
-      this.date = this.$dayjs().format("YYYY 年 MM 月 DD 日");
-      this.time = this.$dayjs().format("HH:mm:ss");
+      this.$http.post("/client/viewSystemTime", {}).then((response) => {
+        // console.log(response.data.system_time, response.data.system_time.split(" "));
+        [this.date, this.time] = response.data.system_time.split(" ");
+      });
+    },
+    timeAdd(millisecond) {
+      this.$http
+        .post("/client/timeForward", {
+          millisecond,
+        })
+        .then((response) => {
+          this.timeInit();
+          this.$emit("needFlush");
+        });
+    },
+    timeAddMinute(event) {
+      event.currentTarget.blur();
+      this.timeAdd(1000 * 60);
+    },
+    timeAddHour(event) {
+      event.currentTarget.blur();
+      this.timeAdd(1000 * 60 * 60);
+    },
+    timeAddDay(event) {
+      event.currentTarget.blur();
+      this.timeAdd(1000 * 60 * 60 * 24);
+    },
+    timeClick(event) {
+      event.currentTarget.blur();
+
+      const h = this.$createElement;
+      this.$msgbox({
+        title: "时间管理带师",
+        center: true,
+        message: h(
+          "div",
+          {
+            style: "text-align:center",
+          },
+          [
+            h(
+              "el-button",
+              {
+                attrs: {
+                  type: "",
+                },
+                on: {
+                  click: this.timeAddMinute,
+                },
+              },
+              "加一分钟"
+            ),
+            h(
+              "el-button",
+              {
+                attrs: {
+                  type: "",
+                },
+                on: {
+                  click: this.timeAddHour,
+                },
+              },
+              "加一小时"
+            ),
+            h(
+              "el-button",
+              {
+                attrs: {
+                  type: "",
+                },
+                on: {
+                  click: this.timeAddDay,
+                },
+              },
+              "加一天"
+            ),
+          ]
+        ),
+        showCancelButton: true,
+        showConfirmButton: false,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+      }).catch(() => {});
     },
   },
 };
