@@ -13,6 +13,7 @@ import db_product from "@/components/DataBase/db_product"
 import db_price from "@/components/DataBase/db_price"
 import db_trade from "@/components/DataBase/db_trade"
 import db_hold from "@/components/DataBase/db_hold"
+import db_money from "@/components/DataBase/db_money"
 import db_variable from "@/components/DataBase/db_variable"
 
 export default new VueRouter({
@@ -32,6 +33,7 @@ export default new VueRouter({
         { path: "/database/db_price", component: db_price },
         { path: "/database/db_trade", component: db_trade },
         { path: "/database/db_hold", component: db_hold },
+        { path: "/database/db_money", component: db_money },
         { path: "/database/db_variable", component: db_variable },
       ]
     },

@@ -33,6 +33,7 @@
           <el-menu-item index="/database/db_price">产品历史单价表</el-menu-item>
           <el-menu-item index="/database/db_trade">交易申请表</el-menu-item>
           <el-menu-item index="/database/db_hold">产品持有表</el-menu-item>
+          <el-menu-item index="/database/db_money">资金流水表</el-menu-item>
           <el-menu-item index="/database/db_variable">变量表</el-menu-item>
         </el-submenu>
       </el-submenu>

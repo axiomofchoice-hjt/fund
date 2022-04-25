@@ -6,7 +6,7 @@
         </el-table-column>
         <el-table-column prop="trade_number" label="订单号">
         </el-table-column>
-        <el-table-column prop="customer_number" label="客户编号">
+        <el-table-column prop="product_number" label="产品编号">
         </el-table-column>
         <el-table-column prop="bank_card_number" label="银行卡号">
         </el-table-column>
