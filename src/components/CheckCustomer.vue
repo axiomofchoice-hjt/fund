@@ -146,11 +146,11 @@ export default {
 
           for (let i of this.product) {
             i.product_number_str = (1000000 + i.product_number + "").substring(1);
-            i.hold_amount_str = "" + i.hold_amount.toFixed(2);
+            i.hold_amount_str = i.hold_amount.toFixed(2);
             if (Math.abs(i.purchase_amount) > 1e-6)
               i.hold_amount_str += ` (+${i.purchase_amount.toFixed(2)})`;
 
-            i.hold_share_str = "" + i.hold_share.toFixed(2);
+            i.hold_share_str = i.hold_share.toFixed(2);
             if (Math.abs(i.redeem_share) > 1e-6)
               i.hold_share_str += ` (-${i.redeem_share.toFixed(2)})`;
           }
