@@ -2,7 +2,10 @@
   <div>
     <el-container>
       <el-main>
-        <h3 style="text-align: center">填写产品信息</h3>
+        <div class="s-header">
+          <el-page-header @back="$router.go(-1)" content="填写产品信息">
+          </el-page-header>
+        </div>
         <el-form ref="form" :model="form" label-width="120px">
           <el-form-item label="产品名称">
             <el-input v-model="form.product_name"></el-input>
@@ -66,3 +69,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.s-header {
+  border: 1px solid rgb(235, 238, 245);
+  padding: 15px;
+  margin-bottom: 15px;
+}
+</style>

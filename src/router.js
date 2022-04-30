@@ -8,6 +8,10 @@ import Product from "@/components/Product"
 import CreateProduct from "@/components/CreateProduct"
 import CheckProduct from "@/components/CheckProduct"
 import PurchaseProduct from "@/components/PurchaseProduct"
+import RedeemProduct from "@/components/RedeemProduct"
+import CheckBankCardChange from "@/components/CheckBankCardChange"
+import CheckProductChange from "@/components/CheckProductChange"
+import Trade from "@/components/Trade"
 
 import db_customer from "@/components/DataBase/db_customer"
 import db_bank_card from "@/components/DataBase/db_bank_card"
@@ -30,6 +34,10 @@ export default new VueRouter({
         { path: "/create-product", component: CreateProduct },
         { path: "/check-product/:number", component: CheckProduct },
         { path: "/purchase-product/:number", component: PurchaseProduct },
+        { path: "/redeem-product/:number", component: RedeemProduct },
+        { path: "/check-bank-card-change/:number", component: CheckBankCardChange },
+        { path: "/check-product-change/:customer/:product", component: CheckProductChange },
+        { path: "/trade", component: Trade },
 
         { path: "/database/db_customer", component: db_customer },
         { path: "/database/db_bank_card", component: db_bank_card },

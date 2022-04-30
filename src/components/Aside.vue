@@ -1,9 +1,12 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align: center">LOGO</h2>
-      <div style="text-align: center">
-        <el-button style="font-size: 20px; line-height: 130%" @click="timeClick">
+      <el-image style="width: 100%" src="/Logo.jpg" fit="contain"></el-image>
+      <div style="text-align: center; margin-bottom: 20px">
+        <el-button
+          style="font-size: 20px; line-height: 130%"
+          @click="timeClick"
+        >
           {{ this.date }} <br />
           {{ this.time }} <br />
           {{ this.week }}
@@ -23,7 +26,7 @@
         <!-- <i class="el-icon-menu"></i> -->
         <span slot="title">客户列表</span>
       </el-menu-item>
-      <el-menu-item index="/C">
+      <el-menu-item index="/trade">
         <!-- <i class="el-icon-document"></i> -->
         <span slot="title">交易记录</span>
       </el-menu-item>
@@ -72,6 +75,18 @@ export default {
       }
       if (this.$route.path.indexOf("/check-product") == 0) {
         return "/product";
+      }
+      if (this.$route.path.indexOf("/purchase-product") == 0) {
+        return "/product";
+      }
+      if (this.$route.path.indexOf("/redeem-product") == 0) {
+        return "/product";
+      }
+      if (this.$route.path.indexOf("/check-bank-card-change") == 0) {
+        return "/customer";
+      }
+      if (this.$route.path.indexOf("/check-product-change") == 0) {
+        return "/customer";
       }
       return this.$route.path;
     },

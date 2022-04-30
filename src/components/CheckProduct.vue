@@ -77,8 +77,20 @@
         <div style="text-align: center; margin-top: 30px">净值走势</div>
         <div style="width: 100%; height: 350px" ref="chart"></div>
         <div style="text-align: center">
-          <el-button type="warning" style="margin: 0 30px" @click="$router.push(`/purchase-product/${basic.product_number}`)">申购</el-button>
-          <el-button type="warning" style="margin: 0 30px">赎回</el-button>
+          <el-button
+            type="warning"
+            style="margin: 0 30px"
+            @click="$router.push(`/purchase-product/${basic.product_number}`)"
+            :disabled="!ableClose"
+            >申购</el-button
+          >
+          <el-button
+            type="warning"
+            style="margin: 0 30px"
+            @click="$router.push(`/redeem-product/${basic.product_number}`)"
+            :disabled="!ableClose"
+            >赎回</el-button
+          >
         </div>
       </el-main>
     </el-container>
@@ -154,7 +166,9 @@ export default {
 
           this.chart = this.$echarts.init(this.$refs.chart);
           let xArr = [],
-            dataArr = [], mx = 0, mn = 1e9;
+            dataArr = [],
+            mx = 0,
+            mn = 1e9;
           for (let i of this.basic.price) {
             xArr.push(i.historical_date.split(" ")[0].substring(5));
             dataArr.push(i.historical_unit_price);
@@ -168,8 +182,8 @@ export default {
             yAxis: {
               type: "value",
               scale: true,
-              max: Math.ceil((mx+(mx-mn)*0.2) * 10) / 10,
-              min: Math.floor((mn-(mx-mn)*0.2) * 10) / 10
+              max: Math.ceil((mx + (mx - mn) * 0.2) * 10) / 10,
+              min: Math.floor((mn - (mx - mn) * 0.2) * 10) / 10,
             },
             series: [
               {

@@ -46,26 +46,22 @@
     </div>
     <div>
       <el-table :data="table" border>
+        <el-table-column prop="trade_number" label="订单号"> </el-table-column>
         <el-table-column prop="product_number_str" label="产品编号">
         </el-table-column>
-        <el-table-column prop="product_name" label="产品名称">
+        <el-table-column prop="customer_name" label="客户姓名">
         </el-table-column>
-        <el-table-column prop="product_risk" label="产品风险">
+        <el-table-column prop="bank_card_number" label="银行卡号">
         </el-table-column>
-        <el-table-column prop="product_type" label="产品类型">
+        <el-table-column prop="trade_type" label="交易类型"> </el-table-column>
+        <el-table-column prop="trade_amount" label="交易金额">
         </el-table-column>
-        <el-table-column prop="product_state" label="产品状态">
+        <el-table-column prop="trade_share_str" label="交易份额">
         </el-table-column>
-        <el-table-column label="净值" :width="250">
-          <template slot-scope="scope">
-            {{ scope.row.price1.toFixed(2) }}
-            <span :style="{ color: pricePercentColor(scope) }">
-              <i :class="pricePercentArrow(scope)"></i>
-              {{ pricePercent(scope).toFixed(2) }}%
-            </span>
-          </template>
+        <el-table-column prop="trade_submit_time" label="提交时间">
         </el-table-column>
-        <el-table-column label="操作" :width="120">
+        <el-table-column prop="trade_state" label="交易状态"> </el-table-column>
+        <!-- <el-table-column label="操作" :width="120">
           <template slot-scope="scope">
             <div style="text-align: center">
               <el-button type="primary" @click="checkProductClick(scope)">
@@ -73,7 +69,7 @@
               </el-button>
             </div>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </div>
   </div>
@@ -87,13 +83,12 @@ export default {
       table: [],
       fold: true,
       form: {
-        product_type1: true,
-        product_type2: true,
-        product_type3: true,
-        product_type4: true,
-        product_risk1: true,
-        product_risk2: true,
-        product_risk3: true,
+        trade_keyword: "",
+        trade_type1: true,
+        trade_type2: true,
+        trade_type5: true,
+        begin_submit_day: "",
+        end_submit_day: "",
       },
     };
   },
@@ -109,27 +104,22 @@ export default {
       if (event != undefined) event.currentTarget.blur();
       this.table = [];
       this.$http
-        .post("/client/searchProduct", {
-          product_keyword: this.filterInput,
-          product_type1: this.form.product_type1,
-          product_type2: this.form.product_type2,
-          product_type3: this.form.product_type3,
-          product_type4: this.form.product_type4,
-          product_risk1: this.form.product_risk1,
-          product_risk2: this.form.product_risk2,
-          product_risk3: this.form.product_risk3,
+        .post("/client/searchTradeRecord", {
+          trade_keyword: "",
+          trade_type1: true,
+          trade_type2: true,
+          trade_type5: true,
+          begin_submit_day: "",
+          end_submit_day: "",
         })
         .then((response) => {
           console.log("filter res:", response);
-          let table = response.data.product_info;
-          for (let i of table) {
-            i.product_number_str = (1000000 + i.product_number + "").slice(
-              1,
-              7
-            );
+          this.table = response.data.trade_info;
+          for (let i of this.table) {
+            i.product_number_str = (i.product_number + 1000000 + "").substring(1)
+            i.trade_share_str = i.trade_share.toFixed(2)
           }
-          this.table = response.data.product_info;
-          console.log(this.table);
+          // console.log(this.table);
         });
     },
     foldClick(event) {

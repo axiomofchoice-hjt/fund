@@ -43,7 +43,7 @@
                 <el-button type="warning" @click="chargeClick($event, scope)">
                   氪金
                 </el-button>
-                <el-button type="primary"> 流水 </el-button>
+                <el-button type="primary" @click="$router.push(`/check-bank-card-change/${scope.row.bank_card_number}`)"> 流水 </el-button>
 
                 <el-popconfirm
                   title="删除银行卡？"
@@ -87,10 +87,10 @@
           <el-table-column prop="hold_share_str" label="持有份额">
           </el-table-column>
           <el-table-column label="操作" :width="220">
-            <template -slot-scope="scope">
+            <template slot-scope="scope">
               <div style="text-align: center">
-                <el-button type="primary"> 查看 </el-button>
-                <el-button type="primary"> 流水 </el-button>
+                <el-button type="primary" @click="$router.push(`/check-product/${scope.row.product_number}`)"> 查看 </el-button>
+                <el-button type="primary" @click="$router.push(`/check-product-change/${$route.params.number}/${scope.row.product_number}`)"> 流水 </el-button>
               </div>
             </template>
           </el-table-column>

@@ -3,7 +3,7 @@
     <el-container>
       <el-main>
         <div class="s-header">
-          <el-page-header @back="$router.go(-1)" content="填写申购信息">
+          <el-page-header @back="$router.go(-1)" content="填写赎回信息">
           </el-page-header>
         </div>
         <el-form ref="form" :model="form" :rules="rules" label-width="120px">
@@ -63,21 +63,21 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="银行卡余额" v-if="form.bank_card_number !== ''">
-            {{ this.bank_card_balance().toFixed(2) }}
+          <el-form-item label="持有份额" v-if="form.bank_card_number !== ''">
+            {{ this.hold_share !== "" ? this.hold_share.toFixed(2) : "" }}
           </el-form-item>
           <el-form-item
-            label="申购金额"
+            label="赎回份额"
             v-if="form.bank_card_number !== ''"
-            prop="trade_amount"
+            prop="redeem_share"
           >
-            <el-input v-model="form.trade_amount"></el-input>
+            <el-input v-model="form.redeem_share"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button
               type="primary"
               @click="createClick"
-              :disabled="!check_trade_amount()"
+              :disabled="!check_redeem_share()"
               >创建</el-button
             >
             <el-button @click="$router.go(-1)">返回</el-button>
@@ -91,15 +91,15 @@
 <script>
 export default {
   data() {
-    var checkTradeAmount = (rule, value, callback) => {
+    var checkRedeemShare = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("金额不能为空"));
+        callback(new Error("份额不能为空"));
       } else if (value.search(/^[0-9]+\.?[0-9]*$/) == -1) {
         callback(new Error("请输入数字"));
       } else if (value.search(/^[0-9]+\.?[0-9]{0,2}$/) == -1) {
         callback(new Error("小数点后最多两位"));
-      } else if (+value - 1e-3 > this.bank_card_balance()) {
-        callback(new Error("余额不足"));
+      } else if (+value - 1e-3 > this.hold_share) {
+        callback(new Error("份额不足"));
       }
       callback();
     };
@@ -107,19 +107,19 @@ export default {
       form: {
         customer_number: "",
         bank_card_number: "",
-        trade_amount: "",
+        redeem_share: "",
         date: "",
         time: "",
       },
       customerOptions: [],
       bankCardOptions: [],
       rules: {
-        trade_amount: {
-          validator: checkTradeAmount,
+        redeem_share: {
+          validator: checkRedeemShare,
           trigger: "change",
         },
       },
-      product_risk: "",
+      hold_share: "",
     };
   },
   mounted() {
@@ -129,12 +129,12 @@ export default {
     getRiskLevel(s) {
       return ["低", "中", "高"].indexOf(s);
     },
-    check_trade_amount() {
-      if (this.form.trade_amount === "") {
+    check_redeem_share() {
+      if (this.form.redeem_share === "") {
         return false;
-      } else if (this.form.trade_amount.search(/^[0-9]+\.?[0-9]{0,2}$/) == -1) {
+      } else if (this.form.redeem_share.search(/^[0-9]+\.?[0-9]{0,2}$/) == -1) {
         return false;
-      } else if (+this.form.trade_amount - 1e-3 > this.bank_card_balance()) {
+      } else if (+this.form.redeem_share - 1e-3 > this.hold_share) {
         return false;
       }
       return true;
@@ -164,21 +164,13 @@ export default {
         console.log(response);
         this.customerOptions = response.data.customer_info;
       });
-      this.$http
-        .post("/client/viewProduct", {
-          product_number: this.$route.params.number,
-        })
-        .then((response) => {
-          console.log(response);
-          this.product_risk = response.data.product_info.product_risk;
-        });
     },
-    purchase() {
+    redeem() {
       this.$http
-        .post("/client/purchaseProduct", {
+        .post("/client/redeemProduct", {
           product_number: this.$route.params.number,
           bank_card_number: this.form.bank_card_number,
-          trade_amount: this.form.trade_amount,
+          trade_share: this.form.redeem_share,
           trade_submit_time:
             this.$dayjs(this.form.date).format("YYYY-MM-DD") +
             " " +
@@ -188,40 +180,19 @@ export default {
           console.log(response);
           this.$message({
             type: "success",
-            message: "申购成功！",
+            message: "赎回成功！",
           });
           this.$router.go(-1);
         });
     },
     createClick() {
-      console.log(this.get_customer_risk(), this.product_risk);
-      if (
-        this.getRiskLevel(this.get_customer_risk()) <
-        this.getRiskLevel(this.product_risk)
-      ) {
-        this.$confirm(
-          `该产品（${
-            this.product_risk
-          }风险）超出客户的风险承受能力（${this.get_customer_risk()}风险），是否继续？`,
-          "该产品超出风险承受能力提醒",
-          {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          }
-        )
-          .then(() => {
-            this.purchase();
-          })
-          .catch(() => {});
-      } else {
-        this.purchase();
-      }
+      this.redeem();
     },
     customerSelect(number) {
       this.bankCardOptions = [];
       this.form.bank_card_number = "";
-      this.form.trade_amount = "";
+      this.form.redeem_share = "";
+      this.hold_share = "";
       this.$http
         .post("/client/viewCustomer", {
           customer_number: this.form.customer_number,
@@ -231,7 +202,17 @@ export default {
         });
     },
     bankCardSelect(number) {
-      this.form.trade_amount = "";
+      this.form.redeem_share = "";
+      this.hold_share = "";
+      this.$http
+        .post("/client/getHoldShare", {
+          bank_card_number: this.form.bank_card_number,
+          product_number: this.$route.params.number,
+        })
+        .then((response) => {
+          console.log(response);
+          this.hold_share = response.data.hold_share;
+        });
     },
   },
 };

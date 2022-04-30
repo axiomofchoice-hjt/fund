@@ -1,9 +1,10 @@
 <template>
   <div style="text-align: center">
-    <div class="s-border">
+    <div class="s-border is-always-shadow">
+      <el-image style="width: 100%" src="/Logo.jpg" fit="contain"></el-image>
       <h3
         style="
-          margin-top: 35px;
+          margin-top: 5px;
           margin-bottom: 15px;
           color: #888;
           font-size: 24px;
@@ -87,7 +88,18 @@ export default {
   display: inline-block;
   width: 300px;
   margin-top: 100px;
-  border: 1px solid rgb(255, 145, 0);
+  background: rgba(0, 0, 0, 0);
+  padding: 20px;
+
+  /* border: 1px solid rgb(255, 145, 0); */
   /* background: rgb(246, 255, 0) */
+}
+
+.is-always-shadow {
+  box-sizing: border-box;
+  border: 1px #ced8e4 solid;
+  border-right: 0;
+  border-radius: 20px;
+  box-shadow: 0 0 10px 2px #bdcee0;
 }
 </style>
