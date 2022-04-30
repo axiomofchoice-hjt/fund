@@ -7,6 +7,7 @@
             placeholder="请输入筛选内容"
             v-model="filterInput"
             clearable
+            @keyup.enter.native="filterClick"
           >
           </el-input>
         </el-table-column>

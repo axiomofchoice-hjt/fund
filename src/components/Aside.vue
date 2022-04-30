@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <el-image style="width: 100%" src="/Logo.jpg" fit="contain"></el-image>
+      <el-image style="width: 100%" src="/Logo.png" fit="contain"></el-image>
       <div style="text-align: center; margin-bottom: 20px">
         <el-button
           style="font-size: 20px; line-height: 130%"

@@ -1,7 +1,7 @@
 <template>
   <div style="text-align: center">
     <div class="s-border is-always-shadow">
-      <el-image style="width: 100%" src="/Logo.jpg" fit="contain"></el-image>
+      <el-image style="width: 100%" src="/Logo.png" fit="contain"></el-image>
       <h3
         style="
           margin-top: 5px;

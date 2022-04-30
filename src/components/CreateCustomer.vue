@@ -6,7 +6,7 @@
           <el-page-header @back="$router.go(-1)" content="填写开户信息">
           </el-page-header>
         </div>
-        <el-form ref="form" :model="form" label-width="120px">
+        <el-form ref="form" :model="form" label-width="120px" :rules="rules">
           <el-form-item label="客户姓名">
             <el-input v-model="form.customer_name"></el-input>
           </el-form-item>
@@ -24,10 +24,10 @@
               <el-radio label="护照"></el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="证件号码">
+          <el-form-item label="证件号码" prop="customer_id">
             <el-input v-model="form.customer_id"></el-input>
           </el-form-item>
-          <el-form-item label="银行卡号">
+          <el-form-item label="银行卡号" prop="bank_card_number">
             <el-input v-model="form.bank_card_number"></el-input>
           </el-form-item>
           <el-form-item label="风险等级">
@@ -38,7 +38,12 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="createClick">开户</el-button>
+            <el-button
+              type="primary"
+              @click="createClick"
+              :disabled="!creatable"
+              >开户</el-button
+            >
             <el-button @click="$router.go(-1)">返回</el-button>
           </el-form-item>
         </el-form>
@@ -50,6 +55,22 @@
 <script>
 export default {
   data() {
+    var checkCustomerId = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("证件号码不能为空"));
+      } else if (value.search(/^[0-9xX]*$/) === -1) {
+        callback(new Error("请输入正确的证件号码"));
+      }
+      callback();
+    };
+    var checkBankCardNumber = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("银行卡号不能为空"));
+      } else if (value.search(/^[0-9]*$/) === -1) {
+        callback(new Error("请输入数字"));
+      }
+      callback();
+    };
     return {
       form: {
         customer_name: "",
@@ -59,16 +80,58 @@ export default {
         bank_card_number: "",
         customer_risk: "",
       },
+      rules: {
+        customer_id: {
+          validator: checkCustomerId,
+          trigger: "change",
+        },
+        bank_card_number: {
+          validator: checkBankCardNumber,
+          trigger: "change",
+        },
+      },
     };
+  },
+  computed: {
+    creatable() {
+      return (
+        this.form.customer_name !== "" &&
+        this.form.customer_type !== "" &&
+        this.form.customer_id_type !== "" &&
+        this.form.customer_id !== "" &&
+        this.form.customer_id.search(/^[0-9xX]*$/) !== -1 &&
+        this.form.bank_card_number !== "" &&
+        this.form.customer_risk !== ""
+      );
+    },
   },
   mounted() {},
   methods: {
     flush() {},
-    createClick() {
+    createClick(event) {
+      if (event !== undefined) event.currentTarget.blur();
       console.log(this.form.customer_name);
       this.$http.post("/client/createCustomer", this.form).then((response) => {
         console.log(response);
-        this.$router.go(-1);
+        if (response.data.message === "Accept!") {
+          this.$message({
+            type: "success",
+            message: "创建成功！",
+          });
+          this.$router.go(-1);
+        } else if (
+          response.data.message === "This customer has been created!"
+        ) {
+          this.$message({
+            type: "error",
+            message: "客户已存在！",
+          });
+        } else if (response.data.message === "This bank card has been used!") {
+          this.$message({
+            type: "error",
+            message: "该银行卡已被绑定！",
+          });
+        }
       });
     },
   },

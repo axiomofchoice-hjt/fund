@@ -297,7 +297,7 @@ export default {
                 });
                 this.flush();
               } else {
-                this.$message.error("该银行卡已被绑定");
+                this.$message.error("该银行卡已被绑定！");
               }
             });
         })

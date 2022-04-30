@@ -78,9 +78,10 @@
               type="primary"
               @click="createClick"
               :disabled="!check_trade_amount()"
-              >创建</el-button
             >
-            <el-button @click="$router.go(-1)">返回</el-button>
+              创建
+            </el-button>
+            <el-button @click="$router.go(-1)"> 返回 </el-button>
           </el-form-item>
         </el-form>
       </el-main>

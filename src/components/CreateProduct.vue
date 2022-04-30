@@ -32,10 +32,20 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="产品单价">
-            <el-input-number v-model="form.product_unit_price" :precision="2" :min="0.01" :step="0.1"></el-input-number>
+            <el-input-number
+              v-model="form.product_unit_price"
+              :precision="2"
+              :min="0.01"
+              :step="0.1"
+            ></el-input-number>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="createClick">创建</el-button>
+            <el-button
+              type="primary"
+              @click="createClick"
+              :disabled="!creatable"
+              >创建</el-button
+            >
             <el-button @click="$router.go(-1)">返回</el-button>
           </el-form-item>
         </el-form>
@@ -57,13 +67,36 @@ export default {
       },
     };
   },
+  computed: {
+    creatable() {
+      return (
+        this.form.product_name !== "" &&
+        this.form.product_risk !== "" &&
+        this.form.product_type !== "" &&
+        this.form.product_state !== ""
+      );
+    },
+  },
   mounted() {},
   methods: {
     flush() {},
-    createClick() {
+    createClick(event) {
+      if (event !== undefined) event.currentTarget.blur();
       this.$http.post("/client/createProduct", this.form).then((response) => {
         console.log(response);
-        this.$router.go(-1);
+        if (response.data.message === "Accept!") {
+          this.$message({
+            type: "success",
+            message: "创建成功！",
+          });
+          this.$router.go(-1);
+        } else {
+          
+          this.$message({
+            type: "error",
+            message: "产品名称已存在！",
+          });
+        }
       });
     },
   },

@@ -72,6 +72,34 @@
             prop="redeem_share"
           >
             <el-input v-model="form.redeem_share"></el-input>
+            <el-button
+              size="mini"
+              round
+              @click="form.redeem_share = (hold_share / 4).toFixed(2)"
+            >
+              1/4
+            </el-button>
+            <el-button
+              size="mini"
+              round
+              @click="form.redeem_share = (hold_share / 3).toFixed(2)"
+            >
+              1/3
+            </el-button>
+            <el-button
+              size="mini"
+              round
+              @click="form.redeem_share = (hold_share / 2).toFixed(2)"
+            >
+              1/2
+            </el-button>
+            <el-button
+              size="mini"
+              round
+              @click="form.redeem_share = hold_share.toFixed(2)"
+            >
+              全部
+            </el-button>
           </el-form-item>
           <el-form-item>
             <el-button
