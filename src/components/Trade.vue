@@ -1,6 +1,10 @@
 <template>
   <div>
     <div>
+      <div class="s-header" v-if="$route.params.customer !== undefined">
+        <el-page-header @back="$router.go(-1)" content="客户交易记录">
+        </el-page-header>
+      </div>
       <el-table :data="[{}]" :show-header="false">
         <el-table-column>
           <el-input
@@ -50,21 +54,36 @@
     </div>
     <div>
       <el-table :data="table" border>
-        <el-table-column prop="trade_number" label="订单号"> </el-table-column>
-        <el-table-column prop="product_number_str" label="产品编号">
+        <el-table-column prop="trade_number" label="订单号" :width="128">
+        </el-table-column>
+        <el-table-column prop="product_number_str" label="产品编号" :width="77">
         </el-table-column>
         <el-table-column prop="customer_name" label="客户姓名">
         </el-table-column>
-        <el-table-column prop="bank_card_number" label="银行卡号">
+        <el-table-column prop="bank_card_number" label="银行卡号" :width="177">
         </el-table-column>
-        <el-table-column prop="trade_type" label="交易类型"> </el-table-column>
+        <el-table-column prop="trade_type" label="交易类型" :width="77">
+        </el-table-column>
         <el-table-column prop="trade_amount" label="交易金额">
         </el-table-column>
         <el-table-column prop="trade_share_str" label="交易份额">
         </el-table-column>
-        <el-table-column prop="trade_submit_time" label="提交时间">
+        <el-table-column prop="trade_submit_time" label="提交时间" :width="159">
         </el-table-column>
-        <el-table-column prop="trade_state" label="交易状态"> </el-table-column>
+        <el-table-column label="交易状态" :width="124">
+          <template slot-scope="scope">
+            {{ scope.row.trade_state }}
+            <el-button
+              type="primary"
+              size="mini"
+              style="padding-left: 10px; padding-right: 10px; margin-left: 10px"
+              v-if="scope.row.trade_state === '未清算'"
+              @click="revokeClick($event, scope)"
+            >
+              撤单
+            </el-button>
+          </template>
+        </el-table-column>
         <!-- <el-table-column label="操作" :width="120">
           <template slot-scope="scope">
             <div style="text-align: center">
@@ -94,6 +113,9 @@ export default {
         end_submit_day: "",
       },
       today: "",
+      now: "",
+      revokeDate: "",
+      revokeTime: "",
       daterange: null,
       dateOptions: {
         shortcuts: [
@@ -108,7 +130,6 @@ export default {
             onClick: (picker) => {
               var end = new Date(this.today);
               var start = new Date(this.today);
-              console.log(this.today);
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 2);
               picker.$emit("pick", [start, end]);
             },
@@ -118,7 +139,6 @@ export default {
             onClick: (picker) => {
               var end = new Date(this.today);
               var start = new Date(this.today);
-              console.log(this.today);
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
               picker.$emit("pick", [start, end]);
             },
@@ -153,16 +173,16 @@ export default {
     flush() {
       this.filterClick();
       this.$http.post("/client/viewSystemTime", {}).then((response) => {
-        let [date, _1, _2] = response.data.system_time.split(" ");
+        let [date, time, _2] = response.data.system_time.split(" ");
         let t = this.$dayjs(date + " 00:00:00", "YYYY-MM-DD HH:mm:ss");
-        console.log(t.format("YYYY-MM-DD HH:mm:ss"));
         this.today = t.toDate();
-        console.log(this.today);
+
+        t = this.$dayjs(date + " " + time, "YYYY-MM-DD HH:mm:ss");
+        this.now = t.toDate();
       });
     },
     filterClick(event) {
       if (event != undefined) event.currentTarget.blur();
-      console.log(this.daterange);
       this.table = [];
       if (this.daterange === null) {
         this.form.begin_submit_day = this.form.end_submit_day = "";
@@ -175,7 +195,18 @@ export default {
         );
       }
       this.$http
-        .post("/client/searchTradeRecord", this.form)
+        .post("/client/searchTradeRecord", {
+          customer_number:
+            this.$route.params.customer === undefined
+              ? 0
+              : this.$route.params.customer,
+          trade_keyword: this.form.trade_keyword,
+          trade_type1: this.form.trade_type1,
+          trade_type2: this.form.trade_type2,
+          trade_type5: this.form.trade_type5,
+          begin_submit_day: this.form.begin_submit_day,
+          end_submit_day: this.form.end_submit_day,
+        })
         .then((response) => {
           console.log("filter res:", response);
           this.table = response.data.trade_info;
@@ -227,6 +258,105 @@ export default {
         ? "el-icon-caret-top"
         : "el-icon-caret-bottom";
     },
+    revokeDateChange(date) {
+      this.revokeDate = date;
+    },
+    revokeTimeChange(date) {
+      this.revokeTime = date;
+    },
+    revokeClick(event, scope) {
+      event.currentTarget.blur();
+      this.revokeDate = this.revokeTime = this.now;
+      const h = this.$createElement;
+      var datevnode = h("el-date-picker", {
+        attrs: {
+          type: "date",
+          placeholder: "选择日期",
+          value: this.revokeDate,
+        },
+        on: {
+          input: (date) => {
+            this.revokeDateChange(date);
+            // console.log(datevnode)
+            datevnode.child.value = date;
+          },
+        },
+      });
+      var timevnode = h("el-time-picker", {
+        attrs: {
+          placeholder: "选择时间",
+          value: this.revokeDate,
+          style: "margin-top: 5px",
+        },
+        on: {
+          input: (date) => {
+            this.revokeTimeChange(date);
+            timevnode.child.value = date;
+          },
+        },
+      });
+
+      this.$msgbox({
+        title: "填写撤单时间",
+        center: true,
+        message: h(
+          "div",
+          {
+            style: "",
+          },
+          [datevnode, timevnode]
+        ),
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+      })
+        .then((action) => {
+          console.log({
+            trade_number: scope.row.trade_number,
+            revoke_submit_time:
+              this.$dayjs(this.revokeDate).format("YYYY-MM-DD") +
+              " " +
+              this.$dayjs(this.revokeTime).format("HH:mm:ss"),
+          });
+          this.$http
+            .post("/client/revokeProduct", {
+              trade_number: scope.row.trade_number,
+              revoke_submit_time:
+                this.$dayjs(this.revokeDate).format("YYYY-MM-DD") +
+                " " +
+                this.$dayjs(this.revokeTime).format("HH:mm:ss"),
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.data.message === "Accept!") {
+                this.$message({
+                  type: "success",
+                  message: "撤单成功！",
+                });
+                this.flush();
+              } else if (
+                response.data.message === "The trade hasn't happened yet!"
+              ) {
+                this.$message.error("撤单时间过早！");
+              } else {
+                this.$message.error("撤单时间过晚！");
+              }
+            });
+        })
+        .catch(() => {});
+    },
+  },
+  watch: {
+    $route(newValue, oldValue) {
+      this.flush();
+    },
   },
 };
 </script>
+<style scoped>
+.s-header {
+  border: 1px solid rgb(235, 238, 245);
+  padding: 15px;
+}
+</style>

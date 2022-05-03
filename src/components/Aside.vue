@@ -88,6 +88,9 @@ export default {
       if (this.$route.path.indexOf("/check-product-change") == 0) {
         return "/customer";
       }
+      if (this.$route.path.indexOf("/trade") == 0) {
+        return "/trade";
+      }
       return this.$route.path;
     },
     timeInit() {

@@ -37,7 +37,7 @@ export default new VueRouter({
         { path: "/redeem-product/:number", component: RedeemProduct },
         { path: "/check-bank-card-change/:number", component: CheckBankCardChange },
         { path: "/check-product-change/:customer/:product", component: CheckProductChange },
-        { path: "/trade", component: Trade },
+        { path: "/trade/:customer?", component: Trade },
 
         { path: "/database/db_customer", component: db_customer },
         { path: "/database/db_bank_card", component: db_bank_card },

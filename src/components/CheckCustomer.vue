@@ -30,6 +30,15 @@
               修改
             </el-button>
           </el-descriptions-item>
+          <el-descriptions-item label="操作">
+            <el-button
+              size="mini"
+              type="primary"
+              @click="$router.push(`/trade/${basic.customer_number}`)"
+            >
+              查看交易记录
+            </el-button>
+          </el-descriptions-item>
         </el-descriptions>
         <div class="s-title" style="margin-top: 10px">银行卡</div>
         <el-table :data="bank_card" border>
@@ -43,7 +52,16 @@
                 <el-button type="warning" @click="chargeClick($event, scope)">
                   氪金
                 </el-button>
-                <el-button type="primary" @click="$router.push(`/check-bank-card-change/${scope.row.bank_card_number}`)"> 流水 </el-button>
+                <el-button
+                  type="primary"
+                  @click="
+                    $router.push(
+                      `/check-bank-card-change/${scope.row.bank_card_number}`
+                    )
+                  "
+                >
+                  流水
+                </el-button>
 
                 <el-popconfirm
                   title="删除银行卡？"
@@ -71,7 +89,9 @@
         >
           <el-table-column>
             <div style="text-align: center">
-              <el-button type="success" @click="addBankCard"> 添加 </el-button>
+              <el-button type="success" @click="addBankCard">
+                添加银行卡
+              </el-button>
             </div>
           </el-table-column>
         </el-table>
@@ -89,8 +109,24 @@
           <el-table-column label="操作" :width="220">
             <template slot-scope="scope">
               <div style="text-align: center">
-                <el-button type="primary" @click="$router.push(`/check-product/${scope.row.product_number}`)"> 查看 </el-button>
-                <el-button type="primary" @click="$router.push(`/check-product-change/${$route.params.number}/${scope.row.product_number}`)"> 流水 </el-button>
+                <el-button
+                  type="primary"
+                  @click="
+                    $router.push(`/check-product/${scope.row.product_number}`)
+                  "
+                >
+                  查看
+                </el-button>
+                <el-button
+                  type="primary"
+                  @click="
+                    $router.push(
+                      `/check-product-change/${$route.params.number}/${scope.row.product_number}`
+                    )
+                  "
+                >
+                  流水
+                </el-button>
               </div>
             </template>
           </el-table-column>
@@ -145,7 +181,9 @@ export default {
           }
 
           for (let i of this.product) {
-            i.product_number_str = (1000000 + i.product_number + "").substring(1);
+            i.product_number_str = (1000000 + i.product_number + "").substring(
+              1
+            );
             i.hold_amount_str = i.hold_amount.toFixed(2);
             if (Math.abs(i.purchase_amount) > 1e-6)
               i.hold_amount_str += ` (+${i.purchase_amount.toFixed(2)})`;
@@ -316,6 +354,11 @@ export default {
         .then((response) => {
           this.flush();
         });
+    },
+  },
+  watch: {
+    $route(newValue, oldValue) {
+      this.flush();
     },
   },
 };
