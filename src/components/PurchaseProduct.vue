@@ -187,11 +187,23 @@ export default {
         })
         .then((response) => {
           console.log(response);
-          this.$message({
-            type: "success",
-            message: "申购成功！",
-          });
-          this.$router.go(-1);
+          var h = this.$createElement;
+          this.$msgbox({
+            title: "申购成功",
+            message: h("div", null, [
+              h("div", null, `申购日期 ${response.data.date1}`),
+              h("div", null, `预计 ${response.data.date2.split(" ")[0]} 15:00 前确认份额`),
+            ]),
+            showCancelButton: false,
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+          })
+            .then(() => {
+              this.$router.go(-1);
+            })
+            .catch(() => {
+              this.$router.go(-1);
+            });
         });
     },
     createClick() {
