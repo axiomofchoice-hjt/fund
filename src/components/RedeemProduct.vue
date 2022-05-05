@@ -64,7 +64,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="持有份额" v-if="form.bank_card_number !== ''">
-            {{ this.hold_share !== "" ? this.hold_share.toFixed(2) : "" }}
+            {{ this.hold_share !== "" ? (Math.floor(this.hold_share * 100 + 1e-6) / 100).toFixed(2) : "" }}
           </el-form-item>
           <el-form-item
             label="赎回份额"
@@ -96,7 +96,10 @@
             <el-button
               size="mini"
               round
-              @click="form.redeem_share = hold_share.toFixed(2)"
+              @click="
+                form.redeem_share =
+                  (Math.floor(hold_share * 100 + 1e-6) / 100).toFixed(2)
+              "
             >
               全部
             </el-button>
@@ -211,7 +214,11 @@ export default {
             title: "赎回成功",
             message: h("div", null, [
               h("div", null, `赎回日期 ${response.data.date1}`),
-              h("div", null, `预计 ${response.data.date2.split(" ")[0]} 15:00 前确认金额`),
+              h(
+                "div",
+                null,
+                `预计 ${response.data.date2.split(" ")[0]} 15:00 前确认金额`
+              ),
             ]),
             showCancelButton: false,
             confirmButtonText: "确定",
