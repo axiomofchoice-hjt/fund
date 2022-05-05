@@ -39,7 +39,7 @@
           style="float: right; margin-left: 10px"
           @click="alwaysSignInClick"
         >
-          登尼玛，直接进
+          演示入口
         </el-button>
         <el-button
           type="success"

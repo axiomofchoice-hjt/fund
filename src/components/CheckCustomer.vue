@@ -50,7 +50,7 @@
             <template slot-scope="scope">
               <div style="text-align: center">
                 <el-button type="warning" @click="chargeClick($event, scope)">
-                  氪金
+                  充值
                 </el-button>
                 <el-button
                   type="primary"
@@ -196,7 +196,7 @@ export default {
     },
     chargeClick(event, scope) {
       if (event != undefined) event.currentTarget.blur();
-      this.$prompt("请输入金额", "氪金", {
+      this.$prompt("请输入金额", "充值", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /^[0-9]+\.?[0-9]{0,2}$/,
@@ -211,7 +211,7 @@ export default {
             .then((response) => {
               this.$message({
                 type: "success",
-                message: "氪金 " + value,
+                message: "充值 " + value,
               });
               this.flush();
             });
@@ -219,7 +219,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "取消氪金",
+            message: "取消充值",
           });
         });
     },
